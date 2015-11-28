@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - '0.12'
+sudo: false
+env:
+  matrix:
+    - GROUP=
+  global:
+    - GHREPO=github.com/phosphorjs/phosphor-dragdrop
+    - secure: C+urnh1lWcED+BBZlqBHIW3uxlHh2bC+wXGTQBAQzqJJBV1lW1NYXysP4FEGFClgmF95sEcGs9+sJr8M/eR97bERVWCS/KMkIYACVzTjJyekNsAWdlhiuEznbG3QnYISwpPzqxjRjhYHIm0oeDWTyjd4ec+YJiL1oFqjHPOuSrxcTMYIIPQxhiuTy2rmlQ/xc5E7dg++oGP5FUsgH7a+WWptj5zk6pAlRk23bqfK09vUTreMDDGvzklDBK+zQFHu4CWYSs4hoxIlG4C1S04UyvdSMcXHoUhvKPqo0ZqqHJuEnXKQami1J7DIOlLd9m+aDc/bwGAdhSdAvMMWvTdHT4Pn5NaY1YYflBEaD/a7X/W8sYl6bVleJMzUNSuFGJARQbyJiQOnZsyBR2OSCw7qbafjFAlS9F/phxOqhD1bWA+03imUqqki5UEfSSH2cf9Fie6Lnsnz328X0fGxLQQeTzFDgkq+zHRSOB/eBoFG8VJ47HAbwmVZ+xxD91ga3plKeKgPDU52T7mXcDvPoi34vw4fGPQZwuPMP8UAuPo5YlpCG1IW0canN9jIfToj7pb36+llBt15PkRvQKjKNhJg74RKWdDGHKYHTCEl5XPFJvAsH7Jh5shLsg9N9Y5IlBEmn5QMq1+U02BzO3dudcTSCeTlLzqTivuc8vkCuuLi+SM=
+install:
+  - bash ./scripts/travis_install.sh
+script:
+  - bash ./scripts/travis_script.sh
+after_success:
+  - bash ./scripts/travis_after_success.sh
