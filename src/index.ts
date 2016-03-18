@@ -556,41 +556,8 @@ class Drag implements IDisposable {
     event.preventDefault();
     event.stopPropagation();
 
-    // Store the previous target as a local variable.
-    let prevTarget = this._currentTarget;
-
-     // Store the current target as a local variable.
-    let currTarget = this._currentTarget;
-
-    // Store the previous indicated element as a local variable.
-    let prevElem = this._currentElement;
-
-    // Find the current indicated element at the given position.
-    let currElem = document.elementFromPoint(event.clientX, event.clientY);
-
-    // Update the current element reference.
-    this._currentElement = currElem;
-
-    // Note: drag enter fires *before* drag leave according to spec.
-    // https://html.spec.whatwg.org/multipage/interaction.html#drag-and-drop-processing-model
-
-    // If the indicated element changes from the previous iteration,
-    // and is different from the current target, dispatch the enter
-    // events and compute the new target element.
-    if (currElem !== prevElem && currElem !== currTarget) {
-      currTarget = dispatchDragEnter(this, currElem, currTarget, event);
-    }
-
-    // If the current target element has changed, update the current
-    // target reference and dispatch the leave event to the old target.
-    if (currTarget !== prevTarget) {
-      this._currentTarget = currTarget;
-      dispatchDragLeave(this, prevTarget, currTarget, event);
-    }
-
-    // Dispatch the drag over event and update the drop action.
-    let action = dispatchDragOver(this, currTarget, event);
-    this._setDropAction(action);
+    // Update the current target node and dispatch enter/leave events.
+    this._updateCurrentTarget(event);
 
     // Move the drag image to the specified client position. This is
     // performed *after* dispatching to prevent unnecessary reflows.
@@ -609,6 +576,11 @@ class Drag implements IDisposable {
     if (event.button !== 0) {
       return;
     }
+
+    // Update the current target node and dispatch enter/leave events.
+    // This prevents a subtle issue where the DOM mutates under the
+    // cursor after the last move event but before the drop event.
+    this._updateCurrentTarget(event);
 
     // If there is no current target, finalize with `None`.
     if (!this._currentTarget) {
@@ -674,6 +646,43 @@ class Drag implements IDisposable {
     document.removeEventListener('keyup', this, true);
     document.removeEventListener('keypress', this, true);
     document.removeEventListener('contextmenu', this, true);
+  }
+
+  /**
+   * Update the current target node using the given mouse event.
+   */
+  private _updateCurrentTarget(event: MouseEvent): void {
+    // Fetch common local state.
+    let prevTarget = this._currentTarget;
+    let currTarget = this._currentTarget;
+    let prevElem = this._currentElement;
+
+    // Find the current indicated element at the given position.
+    let currElem = document.elementFromPoint(event.clientX, event.clientY);
+
+    // Update the current element reference.
+    this._currentElement = currElem;
+
+    // Note: drag enter fires *before* drag leave according to spec.
+    // https://html.spec.whatwg.org/multipage/interaction.html#drag-and-drop-processing-model
+
+    // If the indicated element changes from the previous iteration,
+    // and is different from the current target, dispatch the enter
+    // events and compute the new target element.
+    if (currElem !== prevElem && currElem !== currTarget) {
+      currTarget = dispatchDragEnter(this, currElem, currTarget, event);
+    }
+
+    // If the current target element has changed, update the current
+    // target reference and dispatch the leave event to the old target.
+    if (currTarget !== prevTarget) {
+      this._currentTarget = currTarget;
+      dispatchDragLeave(this, prevTarget, currTarget, event);
+    }
+
+    // Dispatch the drag over event and update the drop action.
+    let action = dispatchDragOver(this, currTarget, event);
+    this._setDropAction(action);
   }
 
   /**
