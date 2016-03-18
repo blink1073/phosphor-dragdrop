@@ -540,11 +540,8 @@ class Drag implements IDisposable {
     case 'keydown':
       this._evtKeyDown(event as KeyboardEvent);
       break;
-    case 'keyup':
-    case 'keypress':
-    case 'mousedown':
-    case 'contextmenu':
-      // Stop all input events during drag-drop.
+    default:
+      // Stop all other events during drag-drop.
       event.preventDefault();
       event.stopPropagation();
       break;
@@ -652,6 +649,10 @@ class Drag implements IDisposable {
     document.addEventListener('mousedown', this, true);
     document.addEventListener('mousemove', this, true);
     document.addEventListener('mouseup', this, true);
+    document.addEventListener('mouseenter', this, true);
+    document.addEventListener('mouseleave', this, true);
+    document.addEventListener('mouseover', this, true);
+    document.addEventListener('mouseout', this, true);
     document.addEventListener('keydown', this, true);
     document.addEventListener('keyup', this, true);
     document.addEventListener('keypress', this, true);
@@ -665,6 +666,10 @@ class Drag implements IDisposable {
     document.removeEventListener('mousedown', this, true);
     document.removeEventListener('mousemove', this, true);
     document.removeEventListener('mouseup', this, true);
+    document.removeEventListener('mouseenter', this, true);
+    document.removeEventListener('mouseleave', this, true);
+    document.removeEventListener('mouseover', this, true);
+    document.removeEventListener('mouseout', this, true);
     document.removeEventListener('keydown', this, true);
     document.removeEventListener('keyup', this, true);
     document.removeEventListener('keypress', this, true);
