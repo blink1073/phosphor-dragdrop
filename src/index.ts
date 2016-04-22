@@ -553,7 +553,8 @@ class Drag implements IDisposable {
    */
   private _evtMouseMove(event: MouseEvent): void {
     // Stop all input events during drag-drop.
-    event.preventDefault();
+    // Do not prevent default, as it prevents the node from scrolling
+    // within its parent during the drag.
     event.stopPropagation();
 
     // Update the current target node and dispatch enter/leave events.
